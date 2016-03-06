@@ -1,3 +1,5 @@
+/* @flow */
+
 import React from 'react';
 import themeable from './themeable';
 import JSONTree from '@alexkuz/react-json-tree';
@@ -6,9 +8,23 @@ import JSONDiff from './JSONDiff';
 import { Iterable } from 'immutable';
 import isIterable from './isIterable';
 
+import type { Base16Theme, Theme, PathItem, Action } from '../flow/types.js';
+
+type PreviewProps = {
+  theme: Theme;
+  delta: Object;
+  nextState: Object;
+  onInspectPath: (path: Array<PathItem>) => void;
+  inspectedPath: Array<PathItem>;
+  tab: string;
+  onSelectTab: (tab: string) => void;
+  action: ?Action;
+  base16Theme: Base16Theme;
+};
+
 const IS_IMMUTABLE_KEY = '@@__IS_IMMUTABLE__@@';
 
-function isImmutable(value) {
+function isImmutable(value): boolean {
   return Iterable.isKeyed(value) || Iterable.isIndexed(value) || Iterable.isIterable(value);
 }
 
@@ -76,7 +92,7 @@ function convertImmutable(value) {
 
 const ActionPreview = ({
   theme, delta, nextState, onInspectPath, inspectedPath, tab, onSelectTab, action, base16Theme
-}) => {
+}: PreviewProps) => {
   const createTheme = themeable(theme);
 
   const labelRenderer = (key, ...rest) =>
@@ -106,7 +122,7 @@ const ActionPreview = ({
           (states are equal)
         </div>
       }
-      {(tab === 'State' && nextState || tab === 'Action') &&
+      {(tab === 'State' && nextState || tab === 'Action' && action) &&
         <JSONTree labelRenderer={labelRenderer}
                   theme={base16Theme}
                   data={tab === 'Action' ? action : nextState}

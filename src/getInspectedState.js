@@ -1,7 +1,11 @@
+/* @flow */
+
 import { Iterable, fromJS } from 'immutable';
 import isIterable from './isIterable';
 
-function iterateToKey(obj, key) { // maybe there's a better way, dunno
+import type { PathItem } from '../flow/types.js';
+
+function iterateToKey(obj: Object, key: number) { // maybe there's a better way, dunno
   let idx = 0;
   for (let entry of obj) {
     if (Array.isArray(entry)) {
@@ -14,11 +18,13 @@ function iterateToKey(obj, key) { // maybe there's a better way, dunno
   }
 }
 
-export default function getInspectedState(state, path, convertImmutable) {
+export default function getInspectedState(
+  state: Object, path: Array<PathItem>, convertImmutable: boolean): any {
+
   state = path.length ?
     {
       [path[path.length - 1]]: path.reduce(
-        (s, key) => {
+        (s: any, key: PathItem) => {
           if (!s) {
             return s;
           }
@@ -26,7 +32,7 @@ export default function getInspectedState(state, path, convertImmutable) {
           if (Iterable.isAssociative(s)) {
             return s.get(key);
           } else if (isIterable(s)) {
-            return iterateToKey(s, key);
+            return iterateToKey(s, typeof key === 'number' ? key : 0);
           }
 
           return s[key];

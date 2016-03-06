@@ -1,6 +1,10 @@
+/* @flow */
+
 import jss from 'jss';
 import jssVendorPrefixer from 'jss-vendor-prefixer';
 import jssNested from 'jss-nested';
+
+import type { Base16Theme, Theme } from '../flow/types.js';
 
 jss.use(jssVendorPrefixer());
 jss.use(jssNested());
@@ -359,7 +363,7 @@ const styles = {
   },
 };
 
-export default function createDefaultTheme(base16Theme) {
+export default function createDefaultTheme(base16Theme: ?Base16Theme): Theme {
   const sheet = jss.createStyleSheet({
     ...colors(colorMap(base16Theme || defaultBase16Theme)),
     ...styles

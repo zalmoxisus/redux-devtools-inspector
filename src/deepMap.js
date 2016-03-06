@@ -1,3 +1,5 @@
+/* @flow */
+
 function deepMapCached(obj, f, ctx, cache) {
   cache.push(obj);
   if (Array.isArray(obj)) {
@@ -24,6 +26,6 @@ function deepMapCached(obj, f, ctx, cache) {
   }
 }
 
-export default function deepMap(obj, f, ctx) {
+export default function deepMap(obj: Object, f: (val: any, key: string) => any, ctx: any): Object {
   return deepMapCached(obj, f, ctx, []);
 }

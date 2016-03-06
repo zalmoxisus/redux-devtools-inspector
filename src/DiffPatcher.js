@@ -1,3 +1,5 @@
+/* @flow */
+
 import { DiffPatcher } from 'jsondiffpatch/src/diffpatcher';
 
 const diffpatcher = new DiffPatcher({

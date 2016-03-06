@@ -1,7 +1,17 @@
+/* @flow */
+
 import React from 'react';
 import JSONTree from '@alexkuz/react-json-tree';
 import themeable from './themeable';
 import stringify from 'javascript-stringify';
+
+import type { Theme, Base16Theme } from '../flow/types.js';
+
+type DiffProps = {
+  delta: Object;
+  theme: Theme;
+  base16Theme: Base16Theme;
+};
 
 function stringifyAndShrink(val) {
   const str = stringify(val);
@@ -66,7 +76,7 @@ function valueRenderer(raw, value, createTheme) {
   return raw;
 }
 
-const JSONDiff = ({ delta, theme, base16Theme, ...props }) => {
+const JSONDiff = ({ delta, theme, base16Theme, ...props }: DiffProps) => {
   const createTheme = themeable(theme);
 
   return (

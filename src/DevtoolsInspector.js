@@ -1,4 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+/* @flow */
+
+import React, { Component } from 'react';
 import themeable from './themeable';
 import createDefaultTheme from './createDefaultTheme';
 import shouldPureComponentUpdate from 'react-pure-render/function';
@@ -8,12 +10,39 @@ import getInspectedState from './getInspectedState';
 import DiffPatcher from './DiffPatcher';
 import getBase16Theme from './getBase16Theme';
 
-function getCurrentActionId(props, state) {
-  const lastActionId = props.stagedActionIds[props.stagedActionIds.length - 1];
-  return state.selectedActionId === null ? lastActionId : state.selectedActionId;
+import type { ActionItems, Action, SCU, PathItem } from '../flow/types.js';
+
+type InspectorProps = {
+  dispatch: (action: any) => void;
+  computedStates: Array<Object>;
+  stagedActionIds: Array<number>;
+  actionsById: ActionItems;
+  theme: string | Object;
+  supportImmutable: boolean;
+};
+
+type InspectorState = {
+  isWideLayout: boolean;
+  selectedActionId: ?number;
+  inspectedActionPath: Array<PathItem>;
+  inspectedStatePath: Array<PathItem>;
+  tab: string;
+  delta: ?Object;
+  currentActionId: number;
+  nextState: Object;
+  action: ?Action;
+  searchValue: string;
+};
+
+function getCurrentActionId(props: InspectorProps, state: InspectorState): number {
+  if (state.selectedActionId || state.selectedActionId === 0) {
+    return state.selectedActionId || 0;
+  }
+  const lastActionId: number = props.stagedActionIds[props.stagedActionIds.length - 1];
+  return lastActionId;
 }
 
-function createState(props, state) {
+function createState(props: InspectorProps, state: InspectorState): Object {
   const { supportImmutable, computedStates, actionsById: actions } = props;
   const currentActionId = getCurrentActionId(props, state);
   const currentAction = actions[currentActionId].action;
@@ -39,45 +68,35 @@ function createState(props, state) {
 }
 
 export default class DevtoolsInspector extends Component {
-  constructor(props) {
+  state: InspectorState;
+  props: InspectorProps;
+
+  updateSizeTimeout: number;
+
+  constructor(props: InspectorProps) {
     super(props);
     this.state = {
       isWideLayout: false,
       selectedActionId: null,
       inspectedActionPath: [],
       inspectedStatePath: [],
-      tab: 'Diff'
+      tab: 'Diff',
+      searchValue: '',
+      delta: null,
+      currentActionId: 0,
+      nextState: {},
+      action: null
     };
   }
-
-  static propTypes = {
-    dispatch: PropTypes.func,
-    computedStates: PropTypes.array,
-    stagedActionIds: PropTypes.array,
-    actionsById: PropTypes.object,
-    currentStateIndex: PropTypes.number,
-    monitorState: PropTypes.shape({
-      initialScrollTop: PropTypes.number
-    }),
-    preserveScrollTop: PropTypes.bool,
-    stagedActions: PropTypes.array,
-    select: PropTypes.func.isRequired,
-    theme: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.string
-    ]),
-    supportImmutable: PropTypes.bool
-  };
 
   static update = (s => s);
 
   static defaultProps = {
     theme: {},
-    select: (state) => state,
     supportImmutable: false
   };
 
-  shouldComponentUpdate = shouldPureComponentUpdate;
+  shouldComponentUpdate: SCU = shouldPureComponentUpdate;
 
   componentWillMount() {
     this.setState(createState(this.props, this.state));
@@ -97,7 +116,7 @@ export default class DevtoolsInspector extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps: InspectorProps, nextState: InspectorState) {
     if (this.props.computedStates !== nextProps.computedStates ||
       getCurrentActionId(this.props, this.state) !== getCurrentActionId(nextProps, nextState) ||
       this.state.inspectedStatePath !== nextState.inspectedStatePath ||
@@ -112,13 +131,16 @@ export default class DevtoolsInspector extends Component {
     const { isWideLayout, selectedActionId, nextState, action,
             searchValue, tab, delta } = this.state;
     const base16Theme = getBase16Theme(theme);
-    const inspectorTheme = { ...createDefaultTheme(base16Theme), ...(base16Theme ? {} : theme) };
+    const inspectorTheme = {
+      ...createDefaultTheme(base16Theme),
+      ...((base16Theme || typeof theme !== 'object') ? {} : theme)
+    };
     const createTheme = themeable(inspectorTheme);
     const inspectedPathType = tab === 'Action' ? 'inspectedActionPath' : 'inspectedStatePath';
 
     return (
       <div key='inspector'
-           {...createTheme('inspector', isWideLayout && 'inspectorWide')}
+           {...createTheme('inspector', isWideLayout ? 'inspectorWide' : null)}
            ref='inspector'>
         <ActionList {...{ actions, actionIds, isWideLayout, searchValue, selectedActionId }}
                     theme={inspectorTheme}

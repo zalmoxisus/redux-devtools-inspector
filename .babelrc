@@ -1,6 +1,6 @@
 {
   "presets": ["es2015", "stage-0", "react"],
-  "plugins": ["transform-runtime"],
+  "plugins": ["transform-flow-strip-types", "transform-runtime"],
   "env": {
     "development": {
       "plugins": [["react-transform", {

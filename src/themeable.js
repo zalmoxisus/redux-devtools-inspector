@@ -1,16 +1,24 @@
+/* @flow */
+
 const truthy = x => x;
 
-export default theme => (...names) => {
-  const styles = names
-    .reduce((arr, name) => [...arr, name, name + 'Color'], [])
-    .map(name => theme[name])
-    .filter(truthy);
+import type { Theme } from '../flow/types.js';
 
-  const classStyles = styles.filter(s => typeof s === 'string');
-  const objStyles = styles.filter(s => typeof s !== 'string');
+export default function themeable(theme: Theme): ((...names: Array<?string>) => Object) {
+  return (...names: Array<?string>) => {
+    const styles = names
+      .reduce((arr: Array<?string>, name: ?string) =>
+        arr.concat(name, name && (name + 'Color')), [])
+      .map(name => name && theme[name])
+      .filter(truthy);
 
-  return {
-    ...(classStyles.length ? { className: classStyles.join(' ') } : {}),
-    ...(objStyles.length ? { style: Object.assign({}, ...objStyles) } : {})
-  };
+    const classStyles = styles.filter(s => typeof s === 'string');
+    const objStyles = styles.filter(s => typeof s !== 'string');
+
+    return {
+      ...(classStyles.length ? { className: classStyles.join(' ') } : {}),
+      // $FlowFixMe: https://github.com/facebook/flow/issues/1414
+      ...(objStyles.length ? { style: Object.assign({}, ...objStyles) } : {})
+    };
+  }
 };

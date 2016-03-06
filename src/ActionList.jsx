@@ -1,8 +1,23 @@
+/* @flow */
+
 import React from 'react';
 import dateformat from 'dateformat';
 import themeable from './themeable';
 
-function getTime(actions, actionIds, actionId) {
+import type { ActionItems } from '../flow/types.js';
+
+type ActionListProps = {
+  theme: Object;
+  actions: ActionItems;
+  actionIds: Array<number>;
+  isWideLayout: boolean;
+  selectedActionId: ?number;
+  onSelect: (actionId: number) => void;
+  onSearch: (searchStr: string) => void;
+  searchValue: ?string;
+};
+
+function getTime(actions: ActionItems, actionIds: Array<number>, actionId: number): string {
   const idx = actionIds.indexOf(actionId);
   const prevActionId = actionIds[idx - 1];
 
@@ -14,16 +29,16 @@ function getTime(actions, actionIds, actionId) {
 const ActionList = ({
   theme, actions, actionIds, isWideLayout,
   selectedActionId, onSelect, onSearch, searchValue
-}) => {
+}: ActionListProps) => {
   const createTheme = themeable(theme);
-  const lowerSearchValue = searchValue && searchValue.toLowerCase();
+  const lowerSearchValue = searchValue ? searchValue.toLowerCase() : '';
   const filteredActionIds = searchValue ? actionIds.filter(
     id => actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1
   ) : actionIds;
 
   return (
     <div key='actionList'
-         {...createTheme('actionList', isWideLayout && 'actionListWide')}>
+         {...createTheme('actionList', isWideLayout ? 'actionListWide' : null)}>
       <input {...createTheme('actionListSearch')}
              onChange={e => onSearch(e.target.value)}
              placeholder='filter...' />
@@ -31,7 +46,7 @@ const ActionList = ({
         <div key={idx}
              {...createTheme(
                 'actionListItem',
-                actionId === selectedActionId && 'actionListItemSelected'
+                actionId === selectedActionId ? 'actionListItemSelected' : null
              )}
              onClick={() => onSelect(actionId)}>
           <div {...createTheme('actionListItemName')}>

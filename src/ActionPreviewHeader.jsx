@@ -1,9 +1,21 @@
+/* @flow */
+
 import React from 'react';
 import themeable from './themeable';
 
+import type { Theme, PathItem } from '../flow/types.js';
+
+type PreviewHeaderProps = {
+  theme: Theme;
+  inspectedPath: Array<PathItem>;
+  onInspectPath: (path: Array<PathItem>) => void;
+  tab: string;
+  onSelectTab: (tab: string) => void;
+};
+
 const ActionPreviewHeader = ({
   theme, inspectedPath, onInspectPath, tab, onSelectTab
-}) => {
+}: PreviewHeaderProps) => {
   const createTheme = themeable(theme);
 
   return (
@@ -14,7 +26,7 @@ const ActionPreviewHeader = ({
                key={t}
                {...createTheme(
                  'tabSelectorButton',
-                 t === tab && 'tabSelectorButtonSelected'
+                 t === tab ? 'tabSelectorButtonSelected' : null
                )}>
             {t}
           </div>
