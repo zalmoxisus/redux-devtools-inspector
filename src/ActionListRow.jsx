@@ -49,14 +49,15 @@ export default class ActionListRow extends Component {
              'actionListItem',
              isSelected && 'actionListItemSelected',
              isSkipped && 'actionListItemSkipped'
-           ], isSelected)}>
+           ], isSelected, action)}>
         <div {...styling(['actionListItemName', isSkipped && 'actionListItemNameSkipped'])}>
           {action.type}
         </div>
         <div {...styling('actionListItemButtons')}>
           <RightSlider styling={styling} shown={!showButtons} rotate>
             <div {...styling('actionListItemTime')}>
-              {dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')}
+              {timeDelta === 0 ? '+00:00:00' :
+                dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')}
             </div>
           </RightSlider>
           <RightSlider styling={styling} shown={showButtons} rotate>

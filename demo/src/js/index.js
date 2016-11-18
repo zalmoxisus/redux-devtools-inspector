@@ -8,10 +8,15 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createLogger from 'redux-logger';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux';
-import { createDevTools } from 'redux-devtools';
+import { createDevTools, persistState } from 'redux-devtools';
 import DevtoolsInspector from '../../../src/DevtoolsInspector';
 import DockMonitor from 'redux-devtools-dock-monitor';
 import getOptions from './getOptions';
+
+function getDebugSessionKey() {
+  const matches = window.location.href.match(/[?&]debug_session=([^&#]+)\b/);
+  return (matches && matches.length > 0)? matches[1] : null;
+}
 
 const CustomComponent = () =>
   <div style={{
@@ -19,6 +24,7 @@ const CustomComponent = () =>
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    height: '100%',
     minHeight: '20rem'
   }}>
     <div>Custom Tab Content</div>
@@ -31,6 +37,7 @@ const getDevTools = options =>
                  changePositionKey='ctrl-q'
                  changeMonitorKey='ctrl-m'>
       <DevtoolsInspector theme={options.theme}
+                         shouldPersistState={true}
                          invertTheme={!options.dark}
                          supportImmutable={options.supportImmutable}
                          tabs={defaultTabs => [{
@@ -53,7 +60,8 @@ const enhancer = compose(
     const instrument = useDevtoolsExtension ?
       window.devToolsExtension() : DevTools.instrument();
     return instrument(...args);
-  }
+  },
+  persistState(getDebugSessionKey())
 );
 
 const store = createStore(combineReducers({
