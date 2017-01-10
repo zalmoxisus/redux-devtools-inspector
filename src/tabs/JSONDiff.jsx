@@ -57,7 +57,7 @@ export default class JSONDiff extends Component {
   }
 
   render() {
-    const { styling, base16Theme, isWideLayout, ...props } = this.props;
+    const { styling, base16Theme, ...props } = this.props;
 
     if (!this.state.data) {
       return (
@@ -71,9 +71,7 @@ export default class JSONDiff extends Component {
       <JSONTree {...props}
                 theme={getJsonTreeTheme(base16Theme)}
                 data={this.state.data}
-                getItemString={
-                  (type, data) => getItemString(styling, type, data, isWideLayout, true)
-                }
+                getItemString={this.getItemString}
                 valueRenderer={this.valueRenderer}
                 postprocessValue={prepareDelta}
                 isCustomNode={Array.isArray}
@@ -81,6 +79,12 @@ export default class JSONDiff extends Component {
                 hideRoot />
     );
   }
+
+  getItemString = (type, data) => (
+    getItemString(
+      this.props.styling, type, data, this.props.dataTypeKey, this.props.isWideLayout, true
+    )
+  )
 
   valueRenderer = (raw, value) => {
     const { styling, isWideLayout } = this.props;

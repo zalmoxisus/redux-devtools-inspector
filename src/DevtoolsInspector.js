@@ -152,8 +152,10 @@ export default class DevtoolsInspector extends Component {
   }
 
   render() {
-    const { stagedActionIds: actionIds, actionsById: actions, computedStates, draggableActions,
-      tabs, invertTheme, skippedActionIds, currentStateIndex, monitorState } = this.props;
+    const {
+      stagedActionIds: actionIds, actionsById: actions, computedStates, draggableActions,
+      tabs, invertTheme, skippedActionIds, currentStateIndex, monitorState, dataTypeKey
+    } = this.props;
     const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
     const inspectedPathType = tabName === 'Action' ? 'inspectedActionPath' : 'inspectedStatePath';
     const {
@@ -180,7 +182,7 @@ export default class DevtoolsInspector extends Component {
                     lastActionId={getLastActionId(this.props)} />
         <ActionPreview {...{
           base16Theme, invertTheme, isWideLayout, tabs, tabName, delta, error, nextState,
-          computedStates, action, actions, selectedActionId, startActionId
+          computedStates, action, actions, selectedActionId, startActionId, dataTypeKey
         }}
                        styling={styling}
                        onInspectPath={this.handleInspectPath.bind(this, inspectedPathType)}
