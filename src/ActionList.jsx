@@ -34,7 +34,7 @@ export default class ActionList extends Component {
         handle.className.indexOf('selectorButton') !== 0
       ),
     }).on('drop', (el, target, source, sibling) => {
-      let beforeActionId = Infinity;
+      let beforeActionId = this.props.actionIds.length;
       if (sibling && sibling.className.indexOf('gu-mirror') === -1) {
         beforeActionId = parseInt(sibling.getAttribute('data-id'));
       }
