@@ -1,6 +1,6 @@
 {
   "name": "remotedev-inspector-monitor",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Redux DevTools Diff Monitor",
   "scripts": {
     "build:lib": "NODE_ENV=production babel src --out-dir lib",
@@ -18,10 +18,6 @@
   "repository": {
     "url": "https://github.com/zalmoxisus/remotedev-inspector-monitor"
   },
-  "keywords": [
-    "react",
-    "reactjs"
-  ],
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-cli": "^6.4.5",
