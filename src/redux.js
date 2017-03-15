@@ -1,6 +1,6 @@
 const UPDATE_MONITOR_STATE = '@@redux-devtools-inspector/UPDATE_MONITOR_STATE';
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
   selectedActionId: null,
   startActionId: null,
   inspectedActionPath: [],

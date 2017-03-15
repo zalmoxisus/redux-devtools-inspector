@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DEFAULT_STATE } from './redux';
 import ActionPreviewHeader from './ActionPreviewHeader';
 import DiffTab from './tabs/DiffTab';
 import StateTab from './tabs/StateTab';
@@ -17,7 +18,7 @@ const DEFAULT_TABS = [{
 
 class ActionPreview extends Component {
   static defaultProps = {
-    tabName: 'Diff'
+    tabName: DEFAULT_STATE.tabName
   }
 
   render() {
@@ -31,7 +32,10 @@ class ActionPreview extends Component {
       tabs(DEFAULT_TABS) :
       (tabs ? tabs : DEFAULT_TABS);
 
-    const { component: TabComponent } = renderedTabs.find(tab => tab.name === tabName);
+    const { component: TabComponent } = (
+      renderedTabs.find(tab => tab.name === tabName)
+      || renderedTabs.find(tab => tab.name === DEFAULT_STATE.tabName)
+    );
 
     return (
       <div key='actionPreview' {...styling('actionPreview')}>
