@@ -120,9 +120,9 @@ export default class DevtoolsInspector extends Component {
     window.clearTimeout(this.updateSizeTimeout);
   }
 
-  updateMonitorState(monitorState) {
+  updateMonitorState = monitorState => {
     this.props.dispatch(updateMonitorState(monitorState));
-  }
+  };
 
   updateSizeMode() {
     const isWideLayout = this.refs.inspector.offsetWidth > 500;
@@ -187,6 +187,8 @@ export default class DevtoolsInspector extends Component {
           base16Theme, invertTheme, isWideLayout, tabs, tabName, delta, error, nextState,
           computedStates, action, actions, selectedActionId, startActionId, dataTypeKey
         }}
+                       monitorState={this.props.monitorState}
+                       updateMonitorState={this.updateMonitorState}
                        styling={styling}
                        onInspectPath={this.handleInspectPath.bind(this, inspectedPathType)}
                        inspectedPath={monitorState[inspectedPathType]}

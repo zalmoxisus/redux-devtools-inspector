@@ -24,7 +24,7 @@ class ActionPreview extends Component {
     const {
       styling, delta, error, nextState, onInspectPath, inspectedPath, tabName,
       isWideLayout, onSelectTab, action, actions, selectedActionId, startActionId,
-      computedStates, base16Theme, invertTheme, tabs, dataTypeKey
+      computedStates, base16Theme, invertTheme, tabs, dataTypeKey, monitorState, updateMonitorState
     } = this.props;
 
     const renderedTabs = (typeof tabs === 'function') ?
@@ -55,7 +55,9 @@ class ActionPreview extends Component {
                 dataTypeKey,
                 delta,
                 action,
-                nextState
+                nextState,
+                monitorState,
+                updateMonitorState
               }}
             />
           </div>
