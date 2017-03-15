@@ -96,7 +96,9 @@ export default class DevtoolsInspector extends Component {
     ]),
     supportImmutable: PropTypes.bool,
     diffObjectHash: PropTypes.func,
-    diffPropertyFilter: PropTypes.func
+    diffPropertyFilter: PropTypes.func,
+    hideMainButtons: PropTypes.bool,
+    hideActionButtons: PropTypes.bool
   };
 
   static update = reducer;
@@ -157,7 +159,8 @@ export default class DevtoolsInspector extends Component {
   render() {
     const {
       stagedActionIds: actionIds, actionsById: actions, computedStates, draggableActions,
-      tabs, invertTheme, skippedActionIds, currentStateIndex, monitorState, dataTypeKey
+      tabs, invertTheme, skippedActionIds, currentStateIndex, monitorState, dataTypeKey,
+      hideMainButtons, hideActionButtons
     } = this.props;
     const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
     const inspectedPathType = tabName === 'Action' ? 'inspectedActionPath' : 'inspectedStatePath';
@@ -172,7 +175,7 @@ export default class DevtoolsInspector extends Component {
            {...styling(['inspector', isWideLayout && 'inspectorWide'], isWideLayout)}>
         <ActionList {...{
           actions, actionIds, isWideLayout, searchValue, selectedActionId, startActionId,
-          skippedActionIds, draggableActions, styling
+          skippedActionIds, draggableActions, hideMainButtons, hideActionButtons, styling
         }}
                     onSearch={this.handleSearch}
                     onSelect={this.handleSelectAction}

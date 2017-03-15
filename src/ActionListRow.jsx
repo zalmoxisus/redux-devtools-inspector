@@ -28,7 +28,7 @@ export default class ActionListRow extends Component {
 
   render() {
     const { styling, isSelected, action, actionId, isInitAction, onSelect,
-            timestamps, isSkipped, isInFuture } = this.props;
+            timestamps, isSkipped, isInFuture, hideActionButtons } = this.props;
     const { hover } = this.state;
     const timeDelta = timestamps.current - timestamps.previous;
     const showButtons = hover && !isInitAction || isSkipped;
@@ -43,8 +43,8 @@ export default class ActionListRow extends Component {
 
     return (
       <div onClick={onSelect}
-           onMouseEnter={this.handleMouseEnter}
-           onMouseLeave={this.handleMouseLeave}
+           onMouseEnter={!hideActionButtons && this.handleMouseEnter}
+           onMouseLeave={!hideActionButtons && this.handleMouseLeave}
            onMouseDown={this.handleMouseDown}
            onMouseUp={this.handleMouseEnter}
            data-id={actionId}
@@ -57,6 +57,14 @@ export default class ActionListRow extends Component {
         <div {...styling(['actionListItemName', isSkipped && 'actionListItemNameSkipped'])}>
           {actionType}
         </div>
+        {hideActionButtons ?
+        <RightSlider styling={styling} shown>
+          <div {...styling('actionListItemTime')}>
+            {timeDelta === 0 ? '+00:00:00' :
+              dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')}
+          </div>
+        </RightSlider>
+        :
         <div {...styling('actionListItemButtons')}>
           <RightSlider styling={styling} shown={!showButtons} rotate>
             <div {...styling('actionListItemTime')}>
@@ -79,6 +87,7 @@ export default class ActionListRow extends Component {
             </div>
           </RightSlider>
         </div>
+        }
       </div>
     );
   }
