@@ -18,8 +18,22 @@ function getTimestamps(actions, actionIds, actionId) {
 export default class ActionList extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
+  componentWillReceiveProps(nextProps) {
+    const node = this.node;
+    if (!node) {
+      this.scrollDown = true;
+    } else if (this.props.lastActionId !== nextProps.lastActionId) {
+      const { scrollTop, offsetHeight, scrollHeight } = node;
+      this.scrollDown = Math.abs(scrollHeight - (scrollTop + offsetHeight)) < 50;
+    } else {
+      this.scrollDown = false;
+    }
+  }
+
   componentDidMount() {
-    this.scrollToBottom(true);
+    this.scrollDown = true;
+    this.scrollToBottom();
+
     if (!this.props.draggableActions) return;
     const container = ReactDOM.findDOMNode(this.refs.rows);
     this.drake = dragula([container], {
@@ -47,18 +61,18 @@ export default class ActionList extends Component {
     if (this.drake) this.drake.destroy();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.lastActionId !== prevProps.lastActionId) {
-      this.scrollToBottom();
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    if (this.scrollDown && this.node) {
+      this.node.scrollTop = this.node.scrollHeight;
     }
   }
 
-  scrollToBottom(force) {
-    const el = ReactDOM.findDOMNode(this.refs.rows);
-    const scrollHeight = el.scrollHeight;
-    if (force || Math.abs(scrollHeight - (el.scrollTop + el.offsetHeight)) < 50) {
-      el.scrollTop = scrollHeight;
-    }
+  getRef = node => {
+    this.node = node;
   }
 
   render() {
@@ -79,7 +93,7 @@ export default class ActionList extends Component {
                           onSweep={onSweep}
                           hasSkippedActions={skippedActionIds.length > 0}
                           hasStagedActions={actionIds.length > 1} />
-        <div {...styling('actionListRows')} ref='rows'>
+        <div {...styling('actionListRows')} ref={this.getRef}>
           {filteredActionIds.map(actionId =>
             <ActionListRow key={actionId}
                            styling={styling}
