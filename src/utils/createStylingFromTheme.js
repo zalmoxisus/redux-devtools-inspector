@@ -43,6 +43,7 @@ const getSheetFromColorMap = map => ({
     'flex-direction': 'column',
     width: '100%',
     height: '100%',
+    'max-height': 'calc(100% - 84px)',
     'font-family': 'monaco, Consolas, "Lucida Console", monospace',
     'font-size': '12px',
     'font-smoothing': 'antialiased',
