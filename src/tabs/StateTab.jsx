@@ -12,6 +12,7 @@ const StateTab = ({
     data={nextState}
     getItemString={(type, data) => getItemString(styling, type, data, dataTypeKey, isWideLayout)}
     invertTheme={invertTheme}
+    sortObjectKeys={(a,b) => (a < b) ? -1 : 1}
     hideRoot
   />;
 
