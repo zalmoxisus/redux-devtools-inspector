@@ -9,7 +9,7 @@ A state monitor for [Redux DevTools](https://github.com/gaearon/redux-devtools) 
 ### Installation
 
 ```
-npm install --save-dev redux-devtools-inspector
+npm install --save-dev remotedev-inspector-monitor
 ```
 
 ### Usage
@@ -21,7 +21,7 @@ You can use `Inspector` as the only monitor in your app:
 ```js
 import React from 'react';
 import { createDevTools } from 'redux-devtools';
-import Inspector from 'redux-devtools-inspector';
+import Inspector from 'remotedev-inspector-monitor';
 
 export default createDevTools(
   <Inspector />
